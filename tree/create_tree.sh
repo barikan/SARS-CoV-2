@@ -1,20 +1,9 @@
 #!/bin/bash
 
-OUTPUT_DIR=/root/tree/output
-REPOSITORY=https://github.com/Hikoyu/SARS-CoV-2.git
+THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+rm $THIS_DIR/*.png
 
-cd ~/
-mkdir $OUTPUT_DIR
-
-Xvfb :1 -screen 0 1024x768x24 &
-export DISPLAY=:1
-
-git clone $REPOSITORY
-
-find ./ -name "*.nwk" | while read nwk
-do
-    # ./phylogeny/RAxML-NG/AA/univ/SARS-CoV-2_200314.raxml.support.nwk 
-    # -> phylogeny_RAxML-NG_AA_univ_SARS-CoV-2_200314.raxml.support.nwk
-    output_file=`sed 's/\.\///g' | sed 's/\//_/g'`.png
-    python create_tree.py $nwk $OUTPUT_DIR/$output_file
-done
+docker pull barikan/ete3_with_qt:3.1.1
+docker run -it --name "ete3" --rm \
+    -v ${THIS_DIR}:/tmp/tree \
+    barikan/ete3_with_qt:3.1.1 /bin/bash /tmp/tree/script/create_tree.sh 

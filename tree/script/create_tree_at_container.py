@@ -3,7 +3,7 @@ import sys
 from ete3 import Tree, TreeStyle
 
 
-def get_genome_metadata():
+def get_genome_metadata(readme):
     """
     Get genome metadata from README.md.
 
@@ -15,7 +15,7 @@ def get_genome_metadata():
     | MT123290        | Genbank         | 05-Feb-2020     | China       | Guangzhou     |                                                                        |
     :return:
     """
-    f = open("README.md", "r")
+    f = open(readme, "r")
     lines = f.readlines()
     is_meta_table = False
     metas = {}
@@ -47,31 +47,31 @@ def get_genome_metadata():
     return metas
 
 
-def rename_accession_no(nwk_file):
+def rename_accession_no(nwk_file, readme):
     """
     Rename accession No. to genome metadata.
     :param nwk_file:
     :return:
     """
-    metas = get_genome_metadata()
+    metas = get_genome_metadata(readme)
 
     f = open(nwk_file, "r")
     nwk = f.read()
 
     for d in metas:
-        nwk = re.sub(d + "..", descriptions[d], nwk)
+        nwk = re.sub(d + "..", metas[d], nwk)
 
     return nwk
 
 
-def create_tree(nwk_file, output_png):
+def create_tree(nwk_file, output_png, readme):
     """
     Create tree image from a nwk file.
     :param nwk_file:
     :param output_png:
     :return:
     """
-    nwk = rename_accession_no(nwk_file)
+    nwk = rename_accession_no(nwk_file, readme)
     t = Tree(nwk)
     ts = TreeStyle()
     ts.show_leaf_name = True
@@ -82,11 +82,12 @@ def create_tree(nwk_file, output_png):
 
 if __name__ == '__main__':
     args = sys.argv
-    if args.count != 3:
-        print("Usage: python create_tree.py [nwk_file] [output_png]")
+    if len(args) != 4:
+        print("Usage: python create_tree_at_container.py [nwk_file] [output_png] [README.md]")
         sys.exit(1)
 
     nwk_file = args[1]
     output_png = args[2]
+    readme = args[3]
 
-    create_tree(nwk_file, output_png)
+    create_tree(nwk_file, output_png, readme)
