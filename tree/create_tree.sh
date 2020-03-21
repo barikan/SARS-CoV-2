@@ -6,4 +6,4 @@ rm $THIS_DIR/*.png
 docker pull barikan/ete3_with_qt:3.1.1
 docker run -it --name "ete3" --rm \
     -v ${THIS_DIR}:/tmp/tree \
-    barikan/ete3_with_qt:3.1.1 /bin/bash /tmp/tree/script/create_tree.sh 
+    barikan/ete3_with_qt:3.1.1 /bin/bash /tmp/tree/script/create_tree_at_container.sh 
