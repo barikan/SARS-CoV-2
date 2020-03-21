@@ -35,7 +35,7 @@ do
 
     echo "Creating tree from "$nwk 
 
-    /usr/conda/bin/python create_tree.py $nwk $OUTPUT_DIR/$output_file $README
+    /usr/conda/bin/python create_tree_at_container.py $nwk $OUTPUT_DIR/$output_file $README
 done
 
 rm $DATA_DIR -rf
